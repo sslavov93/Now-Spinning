@@ -23,6 +23,8 @@ This should be an all-in-one self-contained app with the following modules
         * Width = 2400
         * Height = 250
 
+# How it's supposed to look
+![Screenshot](screenshots/example.png)
 
 # TODO (Dev Notes)
 * Add a makefile or a fabfile with tasks
