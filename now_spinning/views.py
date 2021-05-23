@@ -1,6 +1,6 @@
-from flask import Flask, render_template
+from now_spinning import app
 
-app = Flask(__name__)
+from flask import render_template
 
 
 @app.route('/')
