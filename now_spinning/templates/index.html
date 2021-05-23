@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <meta http-equiv="refresh" content="5">
+    </head>
+    <body>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <!-- Frame Size - 2400 x 250 -->
+        <div class="myDiv">
+            <img src="{{ url_for('static', filename='envio.jpg') }}" alt=”envio” width="250" height="250" style="padding-left: 15px; padding-top: 15px; float:left;">
+        </div>
+        
+        <div class="Title" style="padding-left: 35px; padding-top: 4px; float:left;">
+            <h1 style="font-family:Orbitron;font-size:42px;font-style:Bold;">{{ title }}</h1>
+            <h2 style="font-family:Orbitron;font-size:34px;font-style:Normal;padding-top:10px;">{{ artist }}</h2>
+            <h2 style="font-family:Orbitron;font-size:34px;font-style:Normal;padding-top:10px;">{{ year }}</h2>
+        </div>
+    </body>
+</html>
