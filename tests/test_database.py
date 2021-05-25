@@ -4,7 +4,7 @@ import tempfile
 import pytest
 
 from now_spinning import db
-from now_spinning.database import import_track_data
+from now_spinning.database import import_track_data, export_track_data
 
 
 from now_spinning.models import Track
@@ -232,4 +232,70 @@ class TestTrackDataImport:
             os.remove(path)
 
 
+class TestTrackDataExport:
+    @pytest.fixture
+    def setup(self):
+        db.drop_all()
+        db.create_all()
 
+    @pytest.fixture
+    def teardown(self):
+        db.session.remove()
+        db.drop_all()
+
+    def test_data_export_when_no_data_in_table(self, setup):
+        fd, path = tempfile.mkstemp()
+        try:
+            expected_msg = f"Track data exported in {path}."
+            expected_contents = """{"tracks": []}"""
+
+            actual_msg = export_track_data(path)
+            with os.fdopen(fd, 'r') as tmp:
+                actual_contents = tmp.read()
+
+            assert expected_contents == actual_contents
+            assert expected_msg == actual_msg
+
+        finally:
+            os.remove(path)
+
+    def test_data_export_when_single_track_in_table(self, setup):
+        db.session.add(Track(artist="artist", title="title", year=123))
+        db.session.commit()
+
+        fd, path = tempfile.mkstemp()
+        try:
+            expected_msg = f"Track data exported in {path}."
+            expected_contents = """{"tracks": [{"artist": "artist", "title": "title", "year": 123}]}"""
+
+            actual_msg = export_track_data(path)
+            with os.fdopen(fd, 'r') as tmp:
+                actual_contents = tmp.read()
+
+            assert expected_contents == actual_contents
+            assert expected_msg == actual_msg
+
+        finally:
+            os.remove(path)
+
+    def test_data_export_when_multiple_tracks_in_table(self, setup):
+        db.session.add_all([
+            Track(artist="artist", title="title", year=123),
+            Track(artist="artist2", title="title2", year=123)
+        ])
+        db.session.commit()
+
+        fd, path = tempfile.mkstemp()
+        try:
+            expected_msg = f"Track data exported in {path}."
+            expected_contents = """{"tracks": [{"artist": "artist", "title": "title", "year": 123}, {"artist": "artist2", "title": "title2", "year": 123}]}"""
+
+            actual_msg = export_track_data(path)
+            with os.fdopen(fd, 'r') as tmp:
+                actual_contents = tmp.read()
+
+            assert expected_contents == actual_contents
+            assert expected_msg == actual_msg
+
+        finally:
+            os.remove(path)

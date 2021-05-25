@@ -33,3 +33,14 @@ def import_track_data(path):
 
     except json.decoder.JSONDecodeError:
         return "Incorrect file formatting - abort."
+
+
+def export_track_data(path):
+    all_tracks_result = Track.query.all()
+    export_data = {"tracks": []}
+    for track in all_tracks_result:
+        export_data["tracks"].append({"artist": track.artist, "title": track.title, "year": track.year})
+    with open(path, "w") as f:
+        f.write(json.dumps(export_data))
+
+    return f"Track data exported in {path}."
