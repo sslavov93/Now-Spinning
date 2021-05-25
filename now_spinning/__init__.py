@@ -3,7 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__, instance_relative_config=True)
-app.config.from_object('config.DevConfig')
+config_map = {
+    "production": "config.ProductionConfig",
+    "development": "config.DevelopmentConfig",
+    "testing": "config.TestingConfig"
+}
+app.config.from_object(config_map.get(app.config["ENV"], "config.DevelopmentConfig"))
+
 
 db = SQLAlchemy(app)
 

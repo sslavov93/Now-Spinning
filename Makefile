@@ -4,4 +4,4 @@ serve:
 
 .PHONY: test
 test:
-	coverage run -m pytest
+	FLASK_ENV=testing coverage run -m pytest

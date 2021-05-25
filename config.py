@@ -8,7 +8,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-class ProdConfig(Config):
+class ProductionConfig(Config):
     FLASK_ENV = 'production'
     SECRET_KEY = environ.get('SECRET_KEY')
     DEBUG = False
@@ -17,15 +17,17 @@ class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/prod.db"
 
 
-class DevConfig(Config):
+class DevelopmentConfig(Config):
     FLASK_ENV = 'development'
     DEBUG = True
     TESTING = True
+
     SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/persist.db"
 
 
-class TestConfig(Config):
+class TestingConfig(Config):
     FLASK_ENV = 'testing'
-    DEBUG = True
+    DEBUG = False
     TESTING = True
+
     SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/test.db"
