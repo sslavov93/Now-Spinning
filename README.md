@@ -37,4 +37,8 @@ This should be an all-in-one self-contained app with the following modules
     * Include image location and track length(Stretch)
 * Write tests for the existing views
 * Add functionality to change the now-playing track that is served for the OBS browser
-* 
+* Add delete track from database functionality
+* Change the export to include track IDs as well (as full data will be dropped)
+* Refactor the tests
+    * Have proper setup files, with teardown, removing the test db file after completion
+* Add functionality to support config changes on the fly (Settings changes, etc)
