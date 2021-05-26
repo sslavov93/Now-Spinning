@@ -8,7 +8,7 @@ config_map = {
     "development": "config.DevelopmentConfig",
     "testing": "config.TestingConfig"
 }
-app.config.from_object(config_map.get(app.config["ENV"], "config.DevelopmentConfig"))
+app.config.from_object(config_map.get(app.config.get("ENV"), "config.DevelopmentConfig"))
 
 
 db = SQLAlchemy(app)

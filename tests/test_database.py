@@ -4,7 +4,7 @@ import tempfile
 import pytest
 
 from now_spinning import db
-from now_spinning.database import import_track_data, export_track_data
+from now_spinning.database import import_track_data, export_track_data, add_new_track
 
 
 from now_spinning.models import Track
@@ -16,10 +16,11 @@ class TestTrackDataImport:
         db.drop_all()
         db.create_all()
 
-    @pytest.fixture
-    def teardown(self):
-        db.session.remove()
-        db.drop_all()
+    # TODO Utilise This
+    # @pytest.fixture
+    # def teardown(self):
+    #     db.session.remove()
+    #     db.drop_all()
 
     def test_db_import_for_not_existing_file(self, setup):
         path = "/not/existing/file/path"
@@ -238,10 +239,11 @@ class TestTrackDataExport:
         db.drop_all()
         db.create_all()
 
-    @pytest.fixture
-    def teardown(self):
-        db.session.remove()
-        db.drop_all()
+    # TODO Utilise This
+    # @pytest.fixture
+    # def teardown(self):
+    #     db.session.remove()
+    #     db.drop_all()
 
     def test_data_export_when_no_data_in_table(self, setup):
         fd, path = tempfile.mkstemp()
@@ -299,3 +301,28 @@ class TestTrackDataExport:
 
         finally:
             os.remove(path)
+
+
+class TestAddNewTrack:
+    @pytest.fixture
+    def setup(self):
+        db.drop_all()
+        db.create_all()
+
+    def test_add_new_track_when_some_metadata_is_missing_expect_error(self, setup):
+        expected_msg = "Failed to add new track - missing metadata."
+
+        actual_msg = add_new_track("", "Envio", 2004)
+
+        assert expected_msg == actual_msg
+
+    def test_add_a_track(self, setup):
+        expected_msg = "Added 'For You'."
+
+        actual_msg = add_new_track("For You", "Envio", 2005)
+        all_tracks = Track.query.all()
+        res = Track.query.filter(Track.title == "For You").all()
+
+        assert expected_msg == actual_msg
+        assert 1 == len(all_tracks)
+        assert 1 == len(res)
