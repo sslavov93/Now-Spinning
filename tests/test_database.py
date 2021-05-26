@@ -1,3 +1,4 @@
+import json
 import os
 import tempfile
 
@@ -24,21 +25,18 @@ class TestTrackDataImport:
 
     def test_db_import_for_not_existing_file(self, setup):
         path = "/not/existing/file/path"
-        expected = f"Cannot import data from '{path}' - File Not Found - abort."
 
-        actual = import_track_data(path)
-
-        assert expected == actual
+        with pytest.raises(FileNotFoundError):
+            import_track_data(path)
 
     def test_db_import_for_empty_file(self, setup):
         fd, path = tempfile.mkstemp()
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write('')
-            expected = "Incorrect file formatting - abort."
-            actual = import_track_data(path)
+            with pytest.raises(json.decoder.JSONDecodeError):
+                import_track_data(path)
 
-            assert expected == actual
         finally:
             os.remove(path)
 
@@ -47,10 +45,8 @@ class TestTrackDataImport:
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write(' ')
-            expected = "Incorrect file formatting - abort."
-            actual = import_track_data(path)
-
-            assert expected == actual
+            with pytest.raises(json.decoder.JSONDecodeError):
+                import_track_data(path)
         finally:
             os.remove(path)
 
@@ -59,10 +55,8 @@ class TestTrackDataImport:
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write('{"')
-            expected = "Incorrect file formatting - abort."
-            actual = import_track_data(path)
-
-            assert expected == actual
+            with pytest.raises(json.decoder.JSONDecodeError):
+                import_track_data(path)
         finally:
             os.remove(path)
 
@@ -71,10 +65,9 @@ class TestTrackDataImport:
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write('{"some_field": []}')
-            expected = "Missing required 'tracks' field - abort."
-            actual = import_track_data(path)
+            with pytest.raises(ValueError):
+                import_track_data(path)
 
-            assert expected == actual
         finally:
             os.remove(path)
 
@@ -158,16 +151,15 @@ class TestTrackDataImport:
                 "year": 2004
             }
         ]}'''
-        expected_msg = "Missing track data - abort."
 
         fd, path = tempfile.mkstemp()
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write(contents)
-            actual_msg = import_track_data(path)
+            with pytest.raises(ValueError):
+                import_track_data(path)
             res = Track.query.all()
 
-            assert expected_msg == actual_msg
             assert 0 == len(res)
 
         finally:
@@ -182,16 +174,15 @@ class TestTrackDataImport:
                 "year": 2004
             }
         ]}'''
-        expected_msg = "Missing track data - abort."
 
         fd, path = tempfile.mkstemp()
         try:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write(contents)
-            actual_msg = import_track_data(path)
+            with pytest.raises(ValueError):
+                import_track_data(path)
             res = Track.query.all()
 
-            assert expected_msg == actual_msg
             assert 0 == len(res)
 
         finally:
@@ -223,9 +214,8 @@ class TestTrackDataImport:
             with os.fdopen(fd, 'w') as tmp:
                 tmp.write(contents)
 
-            expected_msg = "Missing track data - abort."
-            actual_msg = import_track_data(path)
-            assert expected_msg == actual_msg
+            with pytest.raises(ValueError):
+                import_track_data(path)
 
             res = Track.query.all()
             assert 1 == len(res)
@@ -310,11 +300,8 @@ class TestAddNewTrack:
         db.create_all()
 
     def test_add_new_track_when_some_metadata_is_missing_expect_error(self, setup):
-        expected_msg = "Failed to add new track - missing metadata."
-
-        actual_msg = add_new_track("", "Envio", 2004)
-
-        assert expected_msg == actual_msg
+        with pytest.raises(ValueError):
+            add_new_track("", "Envio", 2004)
 
     def test_add_a_track(self, setup):
         expected_msg = "Added 'For You'."

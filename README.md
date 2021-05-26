@@ -26,10 +26,15 @@ This should be an all-in-one self-contained app with the following modules
 # How it's supposed to look
 ![Screenshot](screenshots/example.png)
 
-# TODO (Dev Notes)
-* Add a makefile or a fabfile with tasks
-  * Easier execution of commands like `test`, `lint`, `format`, `devserver`, etc
+# Dev Notes
 * The flask app is just one piece of the puzzle, I need some basic UI native app as well
   * That will allow for importing of directories with cover art images and track info (from JSON files for example)
   * Also, it makes more sense to the non-technical person
 * Add a database that will keep the meta information for each track so it can be easily displayed
+
+# TODO List
+* Prepare Json file with track data
+    * Include image location and track length(Stretch)
+* Write tests for the existing views
+* Add functionality to change the now-playing track that is served for the OBS browser
+* 
