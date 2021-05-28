@@ -3,6 +3,15 @@ from now_spinning import app
 from flask import render_template
 
 
-@app.route('/')
-def hello():
-    return render_template("index.html", title="Time To Say Goodbye", artist="Envio", year="2004")
+cache = {"title": "N/A", "artist": "N/A"}
+
+
+@app.route("/now-playing")
+def now_playing():
+    return render_template(
+        "now_playing.html",
+        title=cache.get("title"),
+        artist=cache.get("artist"),
+        year=cache.get("year"),
+        image=cache.get("image"),
+    )

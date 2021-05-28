@@ -1,5 +1,5 @@
-.PHONY: serve
-serve:
+.PHONY: devserver
+devserver:
 	flask run
 
 .PHONY: test
