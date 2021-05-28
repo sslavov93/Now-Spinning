@@ -14,7 +14,8 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/prod.db"
+    # TODO create this in the install directory of the app
+    # SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/prod.db"
 
 
 class DevelopmentConfig(Config):
@@ -22,7 +23,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/persist.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///dev.db"
 
 
 class TestingConfig(Config):
@@ -30,4 +31,4 @@ class TestingConfig(Config):
     DEBUG = False
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:////Users/svet/Desktop/test.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
