@@ -5,7 +5,7 @@ import tempfile
 import pytest
 
 from now_spinning import db
-from now_spinning.database import import_track_data, export_track_data, add_new_track
+from now_spinning.database import import_track_data, export_track_data, add_new_track, delete_track_data_by_id
 
 
 from now_spinning.models import Track
@@ -313,3 +313,26 @@ class TestAddNewTrack:
         assert expected_msg == actual_msg
         assert 1 == len(all_tracks)
         assert 1 == len(res)
+
+
+class TestDeleteTrack:
+    @pytest.fixture
+    def setup(self):
+        db.drop_all()
+        db.create_all()
+
+    @pytest.fixture
+    def add_track(self):
+        db.session.add(Track(title="title1", artist="artist1", year=2000))
+
+    def test_delete_a_track_by_id_if_track_is_not_present(self, setup, add_track):
+        delete_track_data_by_id(3)
+
+        db_size = Track.query.all()
+        assert 1 == len(db_size)
+
+    def test_delete_a_track_by_id_if_track_is_present(self):
+        delete_track_data_by_id(1)
+
+        db_size = Track.query.all()
+        assert 0 == len(db_size)

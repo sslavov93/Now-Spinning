@@ -33,8 +33,6 @@ This should be an all-in-one self-contained app with the following modules
 * Add a database that will keep the meta information for each track so it can be easily displayed
 
 # TODO List
-* Prepare Json file with track data
-    * Include image location and track length(Stretch)
 * Write tests for the existing views
 * Add functionality to change the now-playing track that is served for the OBS browser
 * Add delete track from database functionality

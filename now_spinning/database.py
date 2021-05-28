@@ -49,3 +49,7 @@ def add_new_track(title: str, artist: str, year: int):
     db.session.add(Track(title=title, artist=artist, year=year))
     db.session.commit()
     return f"Added '{title}'."
+
+
+def delete_track_data_by_id(track_id: int):
+    Track.query.filter_by(id=track_id).delete()

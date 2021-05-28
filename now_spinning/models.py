@@ -8,7 +8,7 @@ class Track(db.Model):
     title = db.Column(db.String(256), unique=False, nullable=False)
     artist = db.Column(db.String(10), unique=False, nullable=False)
     year = db.Column(db.Integer, unique=False, nullable=False)
-    # image_location = db.Column(db.String(512), unique=True, nullable=False)
+    image_location = db.Column(db.String(512), unique=False, nullable=True)
 
     def __repr__(self):
         return f"{self.artist} - {self.title} ({self.year})"
