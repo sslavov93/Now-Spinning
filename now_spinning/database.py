@@ -53,3 +53,7 @@ def add_new_track(title: str, artist: str, year: int):
 
 def delete_track_data_by_id(track_id: int):
     Track.query.filter_by(id=track_id).delete()
+
+
+def init_db():
+    db.create_all()

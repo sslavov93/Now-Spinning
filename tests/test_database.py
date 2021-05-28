@@ -12,17 +12,6 @@ from now_spinning.models import Track
 
 
 class TestTrackDataImport:
-    @pytest.fixture
-    def setup(self):
-        db.drop_all()
-        db.create_all()
-
-    # TODO Utilise This
-    # @pytest.fixture
-    # def teardown(self):
-    #     db.session.remove()
-    #     db.drop_all()
-
     def test_db_import_for_not_existing_file(self, setup):
         path = "/not/existing/file/path"
 
@@ -224,17 +213,6 @@ class TestTrackDataImport:
 
 
 class TestTrackDataExport:
-    @pytest.fixture
-    def setup(self):
-        db.drop_all()
-        db.create_all()
-
-    # TODO Utilise This
-    # @pytest.fixture
-    # def teardown(self):
-    #     db.session.remove()
-    #     db.drop_all()
-
     def test_data_export_when_no_data_in_table(self, setup):
         fd, path = tempfile.mkstemp()
         try:
@@ -294,11 +272,6 @@ class TestTrackDataExport:
 
 
 class TestAddNewTrack:
-    @pytest.fixture
-    def setup(self):
-        db.drop_all()
-        db.create_all()
-
     def test_add_new_track_when_some_metadata_is_missing_expect_error(self, setup):
         with pytest.raises(ValueError):
             add_new_track("", "Envio", 2004)
@@ -316,15 +289,6 @@ class TestAddNewTrack:
 
 
 class TestDeleteTrack:
-    @pytest.fixture
-    def setup(self):
-        db.drop_all()
-        db.create_all()
-
-    @pytest.fixture
-    def add_track(self):
-        db.session.add(Track(title="title1", artist="artist1", year=2000))
-
     def test_delete_a_track_by_id_if_track_is_not_present(self, setup, add_track):
         delete_track_data_by_id(3)
 
