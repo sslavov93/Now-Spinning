@@ -1,20 +1,25 @@
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 
-app = Flask(__name__, instance_relative_config=True)
-config_map = {
-    "production": "config.ProductionConfig",
-    "development": "config.DevelopmentConfig",
-    "testing": "config.TestingConfig"
-}
-app.config.from_object(config_map.get(app.config.get("ENV"), "config.DevelopmentConfig"))
+db = SQLAlchemy()
+migrate = Migrate()
 
 
-db = SQLAlchemy(app)
+def create_app():
+    app = Flask(__name__, instance_relative_config=True)
+    config_map = {
+        "production": "config.ProductionConfig",
+        "development": "config.DevelopmentConfig",
+        "testing": "config.TestingConfig"
+    }
+    app.config.from_object(config_map.get(app.config.get("ENV"), "config.DevelopmentConfig"))
+    db.init_app(app)
 
-with app.app_context():
-    from now_spinning import views
+    migrate.init_app(app, db)
 
-if __name__ == '__main__':
-    app.run()
+    with app.app_context():
+        from now_spinning import views
+
+    return app

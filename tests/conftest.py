@@ -1,15 +1,16 @@
 import pytest as pytest
 
 
-from now_spinning import db, app
+from now_spinning import db, create_app
 from now_spinning.database import init_db
 from now_spinning.models import Track
 
 
 @pytest.fixture
 def client():
-    with app.test_client() as client:
-        with app.app_context():
+    app = create_app()
+    with app.app_context():
+        with app.test_client() as client:
             init_db()
         yield client
 

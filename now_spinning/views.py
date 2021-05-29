@@ -1,6 +1,4 @@
-from now_spinning import app
-
-from flask import render_template
+from flask import current_app as app, render_template
 
 
 cache = {"title": "N/A", "artist": "N/A"}
