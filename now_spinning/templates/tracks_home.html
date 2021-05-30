@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Now Spinning</title>
+    </head>
+    <body>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <input type="text" placeholder="Search.."><br><p></p>
+        {% for track in tracks %}
+            <div class="TrackMetadata">
+                <div class="Image">
+                {% if track.image_location %}
+                    <img src="http://localhost:5000/api/v1/static/{{ track.image_location }}" alt=”Artwork” width="150" height="150" style="padding-left: 15px; padding-top: 15px;">
+                {% else %}
+                    <img src="{{ url_for('static', filename='default.png') }}" alt=”No_Artwork_Available” width="150" height="150" style="padding-left: 15px; padding-top: 15px;">
+                {% endif %}
+                </div>
+                <div class="Title" style="padding-left:20px;float:right;">
+                    <h1 style="font-family:Orbitron;font-size:30px;font-style:Bold;">{{ track.title }}</h1>
+                    <h2 style="font-family:Orbitron;font-size:22px;font-style:Normal;">{{ track.artist }}</h2>
+                    <h2 style="font-family:Orbitron;font-size:22px;font-style:Normal;">{{ track.year if track.year else ""}}</h2>
+                </div>
+            </div>
+            <p></p>
+        {% endfor %}
+    </body>
+</html>

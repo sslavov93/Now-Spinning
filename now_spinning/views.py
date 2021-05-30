@@ -14,7 +14,7 @@ def now_playing():
         title=cache.get("title"),
         artist=cache.get("artist"),
         year=cache.get("year"),
-        image=cache.get("image"),
+        image_location=cache.get("image_location"),
     )
 
 
@@ -22,8 +22,7 @@ def now_playing():
 def switch_now_playing_track():
     data = request.get_json()
     t = Track.query.get(data.get("track_id"))
-    print({"artist": t.artist, "year": t.year, "title": t.title, "image": t.image_location})
-    cache.update({"artist": t.artist, "year": t.year, "title": t.title, "image": t.image_location})
+    cache.update({"artist": t.artist, "year": t.year, "title": t.title, "image_location": t.image_location})
     return "track switched"
 
 
@@ -51,26 +50,32 @@ def add_new_track():
 
 @app.route("/")
 def hello():
-    with open(app.config.get("TRACK_METADATA"), "r") as f:
-        data = json.loads(f.read())
-        if "tracks" not in data:
-            raise ValueError("Missing required 'tracks' field - abort.")
-
-        tracks = []
-        for track in data.get("tracks"):
-            if not track.get("title") or not track.get("artist"):
-                raise ValueError("Missing track data - abort.")
-            tracks.append(
-                Track(
-                    title=track.get("title"),
-                    artist=track.get("artist"),
-                    year=track.get("year"),
-                    image_location=track.get("image_location"),
-                )
-            )
-        db.drop_all()
-        db.create_all()
-        db.session.add_all(tracks)
-        db.session.commit()
+    # db.drop_all()
+    tracks = Track.query.all()
+    if len(tracks) < 1:
+        return render_template("index.html")
+    else:
+        return render_template("tracks_home.html", tracks=tracks)
+    # with open(app.config.get("TRACK_METADATA"), "r") as f:
+    #     data = json.loads(f.read())
+    #     if "tracks" not in data:
+    #         raise ValueError("Missing required 'tracks' field - abort.")
+    #
+    #     tracks = []
+    #     for track in data.get("tracks"):
+    #         if not track.get("title") or not track.get("artist"):
+    #             raise ValueError("Missing track data - abort.")
+    #         tracks.append(
+    #             Track(
+    #                 title=track.get("title"),
+    #                 artist=track.get("artist"),
+    #                 year=track.get("year"),
+    #                 image_location=track.get("image_location"),
+    #             )
+    #         )
+    #     db.drop_all()
+    #     db.create_all()
+    #     db.session.add_all(tracks)
+    #     db.session.commit()
 
     return "data imported"
