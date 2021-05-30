@@ -1,12 +1,16 @@
 <html>
     <head>
-        <meta http-equiv="refresh" content="20">
+        <meta http-equiv="refresh" content="5">
     </head>
     <body>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <!-- Frame Size - 2400 x 250 -->
         <div class="myDiv">
-            <img src="{{ image if image else url_for('static', filename='default.png') }}" alt=”envio” width="250" height="250" style="padding-left: 15px; padding-top: 15px; float:left;">
+            {% if image %}
+                <img src="http://localhost:5000/api/v1/static/{{ image }}" alt=”Artwork” width="250" height="250" style="padding-left: 15px; padding-top: 15px; float:left;">
+            {% else %}
+                <img src="{{ url_for('static', filename='default.png') }}" alt=”No_Artwork_Available” width="250" height="250" style="padding-left: 15px; padding-top: 15px; float:left;">
+            {% endif %}
         </div>
 
         <div class="Title" style="padding-left: 35px; padding-top: 4px; float:left;">

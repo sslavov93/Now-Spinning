@@ -302,7 +302,7 @@
 #         db_size = Track.query.all()
 #         assert 1 == len(db_size)
 #
-#     def test_delete_a_track_by_id_if_track_is_present(self):
+#     def test_delete_a_track_by_id_if_track_is_present(self, setup, add_track):
 #         delete_track_data_by_id(1)
 #
 #         db_size = Track.query.all()

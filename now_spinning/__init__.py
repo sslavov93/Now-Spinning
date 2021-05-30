@@ -12,7 +12,7 @@ def create_app():
     config_map = {
         "production": "config.ProductionConfig",
         "development": "config.DevelopmentConfig",
-        "testing": "config.TestingConfig"
+        "testing": "config.TestingConfig",
     }
     app.config.from_object(config_map.get(app.config.get("ENV"), "config.DevelopmentConfig"))
     db.init_app(app)
