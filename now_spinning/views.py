@@ -50,8 +50,28 @@ def add_new_track():
 
 @app.route("/")
 def hello():
-    # db.drop_all()
-    tracks = Track.query.all()
+    with open(app.config.get("TRACK_METADATA"), "r") as f:
+        data = json.loads(f.read())
+        if "tracks" not in data:
+            raise ValueError("Missing required 'tracks' field - abort.")
+
+        tracks = []
+        for track in data.get("tracks"):
+            if not track.get("title") or not track.get("artist"):
+                raise ValueError("Missing track data - abort.")
+            tracks.append(
+                Track(
+                    title=track.get("title"),
+                    artist=track.get("artist"),
+                    year=track.get("year"),
+                    image_location=track.get("image_location"),
+                )
+            )
+        db.drop_all()
+        db.create_all()
+        db.session.add_all(tracks)
+        db.session.commit()
+    tracks = Track.query.order_by(Track.title.asc()).all()
     if len(tracks) < 1:
         return render_template("index.html")
     else:
@@ -77,5 +97,3 @@ def hello():
     #     db.create_all()
     #     db.session.add_all(tracks)
     #     db.session.commit()
-
-    return "data imported"
