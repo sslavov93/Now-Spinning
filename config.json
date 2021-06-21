@@ -1,0 +1,11 @@
+{
+    "DEBUG": true,
+    "SECRET_KEY": "development key",
+    "STATIC_FOLDER": "static",
+    "TEMPLATES_FOLDER": "templates",
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///dev.db",
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+
+    "MEDIA_FOLDER": "/Users/svet/Google Drive/Music/now_spinning_data/images",
+    "TRACK_METADATA": "/Users/svet/Google Drive/Music/now_spinning_data/records.json"
+}
