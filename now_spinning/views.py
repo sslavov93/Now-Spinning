@@ -1,6 +1,8 @@
 import json
 
 from flask import current_app as app, request, render_template, jsonify, send_from_directory
+from sqlalchemy import or_
+
 from now_spinning import db
 from now_spinning.models import Track
 
@@ -48,31 +50,40 @@ def add_new_track():
     return jsonify({"title": data.get("title"), "artist": data.get("artist")})
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def hello():
-    with open(app.config.get("TRACK_METADATA"), "r") as f:
-        data = json.loads(f.read())
-        if "tracks" not in data:
-            raise ValueError("Missing required 'tracks' field - abort.")
-
-        tracks = []
-        for track in data.get("tracks"):
-            if not track.get("title") or not track.get("artist"):
-                raise ValueError("Missing track data - abort.")
-            tracks.append(
-                Track(
-                    title=track.get("title"),
-                    artist=track.get("artist"),
-                    year=track.get("year"),
-                    image_location=track.get("image_location"),
-                )
-            )
-        db.drop_all()
-        db.create_all()
-        db.session.add_all(tracks)
-        db.session.commit()
-    tracks = Track.query.order_by(Track.title.asc()).all()
-    if len(tracks) < 1:
-        return render_template("index.html")
+    if request.method == "POST":
+        query = request.form.get("search_query")
+        terms = query.split()
+        q = Track.query
+        for term in terms:
+            q = q.filter(or_(Track.title.like(f"%{term}%"), Track.artist.like(f"%{term}%")))
+        res = q.all()
+        return render_template("tracks_home.html", tracks=res)
     else:
-        return render_template("tracks_home.html", tracks=tracks)
+        with open(app.config.get("TRACK_METADATA"), "r") as f:
+            data = json.loads(f.read())
+            if "tracks" not in data:
+                raise ValueError("Missing required 'tracks' field - abort.")
+
+            tracks = []
+            for track in data.get("tracks"):
+                if not track.get("title") or not track.get("artist"):
+                    raise ValueError("Missing track data - abort.")
+                tracks.append(
+                    Track(
+                        title=track.get("title"),
+                        artist=track.get("artist"),
+                        year=track.get("year"),
+                        image_location=track.get("image_location"),
+                    )
+                )
+            db.drop_all()
+            db.create_all()
+            db.session.add_all(tracks)
+            db.session.commit()
+        tracks = Track.query.order_by(Track.title.asc()).all()
+        if len(tracks) < 1:
+            return render_template("index.html")
+        else:
+            return render_template("tracks_home.html", tracks=tracks)

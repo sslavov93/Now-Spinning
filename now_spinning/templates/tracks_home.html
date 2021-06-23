@@ -24,8 +24,10 @@
     </head>
     <body>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-<!--        <input type="text" placeholder="Search.."><br><p></p>-->
-        {% for track in tracks %}
+        <form class="example" method="post" action="" style="max-width:2600px">
+            <input type="text" placeholder="Search tracks..." name="search_query">
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>        {% for track in tracks %}
             <div class="Track">
                 <div class="Image">
                 {% if track.image_location %}
